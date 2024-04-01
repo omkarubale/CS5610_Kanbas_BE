@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/omkarubale/CS5610_Kanbas_BE/issues"
   },
-  "homepage": "https://github.com/omkarubale/CS5610_Kanbas_BE#readme"
+  "homepage": "https://github.com/omkarubale/CS5610_Kanbas_BE#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
 }
