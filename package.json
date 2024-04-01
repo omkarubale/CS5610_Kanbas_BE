@@ -1,0 +1,28 @@
+{
+  "name": "kanbas-node-server-app",
+  "version": "1.0.0",
+  "description": "Node.js HTTP Web server for the Kanbas application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omkarubale/CS5610_Kanbas_BE.git"
+  },
+  "keywords": [
+    "Node",
+    "REST",
+    "Server",
+    "HTTP",
+    "Web",
+    "Development",
+    "CS5610"
+  ],
+  "author": "Omkar Ubale",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/omkarubale/CS5610_Kanbas_BE/issues"
+  },
+  "homepage": "https://github.com/omkarubale/CS5610_Kanbas_BE#readme"
+}
