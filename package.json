@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/omkarubale/CS5610_Kanbas_BE#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2"
   }
 }
