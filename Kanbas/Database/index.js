@@ -5,6 +5,9 @@ import assignmentSections from "./assignmentSections.js";
 import users from "./users.js";
 import grades from "./grades.js";
 import enrollments from "./enrollments.js";
+import quizzes from "./quizzes.js";
+import quizQuestions from "./quizQuestions.js";
+
 export default {
   courses,
   modules,
@@ -13,4 +16,6 @@ export default {
   users,
   grades,
   enrollments,
+  quizzes,
+  quizQuestions,
 };
