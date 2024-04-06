@@ -22,6 +22,34 @@ function QuizRoutes(app) {
       });
     res.send(quizzes);
   });
+
+  app.get("/api/quizzes/:qid", (req, res) => {
+    const { qid } = req.params;
+    const quizDetails = db.quizzes.find((q) => q._id === qid);
+    if (!quizDetails) {
+      res.status(404).send("Quiz not found");
+      return;
+    }
+    res.send(quizDetails);
+  });
+
+  app.post("/api/quizzes/:qid/publish", (req, res) => {
+    const { qid } = req.params;
+    const quizIndex = db.quizzes.findIndex((q) => q._id === qid);
+    if (quizIndex === -1) {
+      res.status(404).send("Quiz not found");
+      return;
+    }
+
+    const { isPublished } = req.body;
+    console.log(isPublished);
+
+    db.quizzes[quizIndex] = {
+      ...db.quizzes[quizIndex],
+      isPublished: isPublished,
+    };
+    res.sendStatus(204);
+  });
 }
 
 export default QuizRoutes;
