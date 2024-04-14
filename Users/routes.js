@@ -8,20 +8,32 @@ export default function UserRoutes(app) {
   const findUserById = async (req, res) => {};
   const updateUser = async (req, res) => {
     const { userId } = req.params;
-    const status = await dao.updateUser(userId, req.body);
-    currentUser = await dao.findUserById(userId);
-    res.json(status);
+    try {
+      delete req.body._id;
+      const status = await dao.updateUser(userId, req.body);
+      currentUser = await dao.findUserById(userId);
+      res.json(status);
+    } catch (e) {
+      console.log("ERROR", e);
+    }
   };
   const signup = async (req, res) => {};
   const signin = async (req, res) => {
-    const { username, password } = req.body;
-    currentUser = await dao.findUserByCredentials(username, password);
-    console.log("currentUser: ", currentUser);
-    res.json(currentUser);
+    try {
+      const { username, password } = req.body;
+      currentUser = await dao.findUserByCredentials(username, password);
+      res.json(currentUser);
+    } catch (e) {
+      console.log("ERROR", e);
+    }
   };
   const signout = (req, res) => {};
   const profile = async (req, res) => {
-    res.json(currentUser);
+    try {
+      res.json(currentUser);
+    } catch (e) {
+      console.log("ERROR", e);
+    }
   };
 
   app.post("/api/users", createUser);
