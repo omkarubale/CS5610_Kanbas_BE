@@ -1,5 +1,4 @@
 import * as dao from "./dao.js";
-let currentUser = null;
 
 export default function UserRoutes(app) {
   const createUser = async (req, res) => {
@@ -61,7 +60,9 @@ export default function UserRoutes(app) {
       if (user) {
         res.status(400).json({ message: "Username already taken" });
       }
-      currentUser = await dao.createUser(req.body);
+      const currentUser = await dao.createUser(req.body);
+      console.log("saved to session: ", currentUser);
+      req.session["currentUser"] = currentUser;
       res.json(currentUser);
     } catch (e) {
       console.log("ERROR", e);
@@ -69,22 +70,36 @@ export default function UserRoutes(app) {
   };
 
   const signin = async (req, res) => {
+    console.log("Signin: ", req.body);
     try {
       const { username, password } = req.body;
-      currentUser = await dao.findUserByCredentials(username, password);
-      res.json(currentUser);
+      const currentUser = await dao.findUserByCredentials(username, password);
+      if (currentUser) {
+        console.log("saved to session: ", currentUser);
+        req.session["currentUser"] = currentUser;
+        res.json(currentUser);
+      } else {
+        res.sendStatus(401);
+      }
     } catch (e) {
       console.log("ERROR", e);
     }
   };
 
   const signout = (req, res) => {
-    currentUser = null;
+    req.session.destroy();
     res.sendStatus(200);
   };
 
   const profile = async (req, res) => {
+    console.log("Profile: ", req.body);
     try {
+      const currentUser = req.session["currentUser"];
+      console.log("fetched session: ", currentUser);
+      if (!currentUser) {
+        res.sendStatus(401);
+        return;
+      }
       res.json(currentUser);
     } catch (e) {
       console.log("ERROR", e);
