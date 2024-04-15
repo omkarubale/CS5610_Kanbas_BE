@@ -55,7 +55,19 @@ export default function UserRoutes(app) {
     }
   };
 
-  const signup = async (req, res) => {};
+  const signup = async (req, res) => {
+    try {
+      const user = await dao.findUserByUsername(req.body.username);
+      if (user) {
+        res.status(400).json({ message: "Username already taken" });
+      }
+      currentUser = await dao.createUser(req.body);
+      res.json(currentUser);
+    } catch (e) {
+      console.log("ERROR", e);
+    }
+  };
+
   const signin = async (req, res) => {
     try {
       const { username, password } = req.body;
@@ -66,7 +78,11 @@ export default function UserRoutes(app) {
     }
   };
 
-  const signout = (req, res) => {};
+  const signout = (req, res) => {
+    currentUser = null;
+    res.sendStatus(200);
+  };
+
   const profile = async (req, res) => {
     try {
       res.json(currentUser);
