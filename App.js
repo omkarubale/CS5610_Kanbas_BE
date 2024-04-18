@@ -22,7 +22,10 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: process.env.FRONTEND_URL,
+    origin: [
+      process.env.FRONTEND_URL,
+      /^https:\/\/[0-9A-Za-z]+--omkarubale-cs5610-kanbas\.netlify\.app$/,
+    ],
   })
 );
 app.use(express.json());
