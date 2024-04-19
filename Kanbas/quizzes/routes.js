@@ -50,6 +50,14 @@ function QuizRoutes(app) {
     };
     res.sendStatus(204);
   });
+
+  app.get("/api/quizzes/:qid/questions", (req, res) => {
+    const { qid } = req.params;
+    const questions = db.quizQuestions
+      .filter((q) => q.quizId === qid);
+
+    res.send(questions);
+  })
 }
 
 export default QuizRoutes;
