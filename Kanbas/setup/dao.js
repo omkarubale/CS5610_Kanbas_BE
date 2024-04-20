@@ -16,6 +16,7 @@ export const repopulateData = async (isTesting) => {
     const course = await coursesModel.create(c);
     console.log("course created: ", course);
 
+    // populate modules for course
     const modulePromises = db.modules
       .filter((m) => m.courseId == _courseId)
       .map(async (m) => {
@@ -62,9 +63,13 @@ export const repopulateData = async (isTesting) => {
         return module;
       });
 
+    await Promise.all(modulePromises);
+
+    // TODO: populate assignments for course
+    // TODO: populate grades for course
+    // TODO: populate quizzes for course
+
     // reset course data
     c._id = _courseId;
-
-    await Promise.all(modulePromises);
   }
 };
