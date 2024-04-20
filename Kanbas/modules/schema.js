@@ -5,7 +5,7 @@ export const lessonSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: String,
-    module: { type: Schema.ObjectId, ref: "ModulesModel" },
+    moduleId: { type: Schema.ObjectId, ref: "ModulesModel" },
   },
   { collection: "moduleLessons" }
 );

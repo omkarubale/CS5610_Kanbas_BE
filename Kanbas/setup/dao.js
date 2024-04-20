@@ -34,14 +34,14 @@ export const repopulateData = async (isTesting) => {
           const lessonPromises = _lessons.map(async (l) => {
             const _lessonId = l._id;
             delete l._id;
-            l.module = module._id;
+            l.moduleId = module._id;
 
             const lesson = await lessonsModel.create(l);
             console.log("lesson created: ", lesson);
 
             // reset lesson data
             l._id = _lessonId;
-            l.module = _moduleId;
+            l.moduleId = _moduleId;
 
             return lesson._id;
           });
