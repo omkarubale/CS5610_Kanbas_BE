@@ -5,7 +5,7 @@ export const lessonSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: String,
-    module: { type: Schema.ObjectId, ref: "ModuleModel" },
+    module: { type: Schema.ObjectId, ref: "ModulesModel" },
   },
   { collection: "moduleLessons" }
 );
@@ -14,8 +14,8 @@ export const moduleSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: String,
-    courseId: { type: Schema.ObjectId, ref: "CourseModel" },
-    lessons: [{ type: Schema.ObjectId, ref: "LessonModel" }],
+    courseId: { type: Schema.ObjectId, ref: "CoursesModel" },
+    lessons: [{ type: Schema.ObjectId, ref: "LessonsModel" }],
   },
   { collection: "modules" }
 );

@@ -1,15 +1,16 @@
-import model from "./model.js";
+import coursesModel from "./model.js";
 
 export const createCourse = (course) => {
   delete course._id;
-  return model.create(course);
+  return coursesModel.create(course);
 };
 
-export const findAllCourses = () => model.find();
+export const findAllCourses = () => coursesModel.find();
 
-export const findCourseById = (courseId) => model.findById(courseId);
+export const findCourseById = (courseId) => coursesModel.findById(courseId);
 
 export const updateCourse = (courseId, course) =>
-  model.findOneAndUpdate({ _id: courseId }, { $set: course });
+  coursesModel.findOneAndUpdate({ _id: courseId }, { $set: course });
 
-export const deleteCourse = (courseId) => model.deleteOne({ _id: courseId });
+export const deleteCourse = (courseId) =>
+  coursesModel.deleteOne({ _id: courseId });

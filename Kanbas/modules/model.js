@@ -1,4 +1,4 @@
 import mongoose from "mongoose";
 import { lessonSchema, moduleSchema } from "./schema.js";
-export const lessonModel = mongoose.model("LessonModel", lessonSchema);
-export const moduleModel = mongoose.model("ModuleModel", moduleSchema);
+export const lessonsModel = mongoose.model("LessonsModel", lessonSchema);
+export const modulesModel = mongoose.model("ModulesModel", moduleSchema);

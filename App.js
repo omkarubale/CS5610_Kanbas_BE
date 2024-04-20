@@ -7,6 +7,7 @@ import ModuleRoutes from "./Kanbas/modules/routes.js";
 import AssignmentRoutes from "./Kanbas/assignments/routes.js";
 import QuizRoutes from "./Kanbas/quizzes/routes.js";
 import UserRoutes from "./Users/routes.js";
+import SetupRoutes from "./Kanbas/setup/routes.js";
 import mongoose from "mongoose";
 import session from "express-session";
 import "dotenv/config";
@@ -46,6 +47,7 @@ if (process.env.NODE_ENV !== "development") {
 }
 app.use(session(sessionOptions));
 
+SetupRoutes(app);
 UserRoutes(app);
 CourseRoutes(app);
 ModuleRoutes(app);
