@@ -1,4 +1,5 @@
 import { lessonsModel, modulesModel } from "./model.js";
+import { mongo } from "mongoose";
 
 export const createModule = (module) => {
   delete module._id;
@@ -17,3 +18,16 @@ export const updateModule = (moduleId, module) =>
 
 export const deleteModule = (moduleId) =>
   modulesModel.deleteOne({ _id: moduleId });
+
+export const findLessons = (lessonIds) => {
+  return lessonsModel.find({
+    _id: {
+      $in: lessonIds.map((lessonId) => new mongo.ObjectId(lessonId)),
+    },
+  });
+};
+
+export const createModuleLesson = (moduleLesson) => {
+  delete moduleLesson._id;
+  return lessonsModel.create(moduleLesson);
+};

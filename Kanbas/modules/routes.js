@@ -26,11 +26,32 @@ function ModuleRoutes(app) {
   app.post("/api/courses/:cid/modules", async (req, res) => {
     try {
       const { cid } = req.params;
+      const lessonIds = req.body.lessons.map((l) => l._id);
+      req.body.lessons = [];
+
+      const lessons = await dao.findLessons(lessonIds);
+
       const newModule = {
         ...req.body,
         courseId: cid,
       };
       const module = await dao.createModule(newModule);
+
+      if (lessons.length > 0) {
+        const lessonPromises = lessons.map(async (l) => {
+          l.moduleId = module._id;
+          const lesson = await dao.createModuleLesson(l);
+
+          return lesson;
+        });
+
+        const newLessons = await Promise.all(lessonPromises);
+        module.lessons = newLessons.map((l) => l._id);
+        module.save();
+
+        module.lessons = newLessons;
+      }
+
       res.send(module);
     } catch (e) {
       console.log("ERROR", e);
