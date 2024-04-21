@@ -187,7 +187,8 @@ export const repopulateData = async () => {
 
     // TODO: populate assignments for course
     // TODO: populate grades for course
-    // TODO: populate quizzes for course
+
+    // populate quizzes for course
     await generateQuizes(course._id);
 
     // reset course data
