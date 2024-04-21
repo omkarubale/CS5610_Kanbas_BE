@@ -1,63 +1,67 @@
-import db from "../Database/index.js";
+import * as dao from "./dao.js";
 
-function QuizRoutes(app) {
-  app.get("/api/courses/:cid/quizzes", (req, res) => {
-    const { cid } = req.params;
-    const quizzes = db.quizzes
-      .filter((q) => q.courseId === cid)
-      .map((q) => {
-        const quiz = {
-          _id: q._id,
-          courseId: q.courseId,
-          title: q.title,
-          assignmentGroup: q.assignmentGroup,
-          availableDate: q.availableDate,
-          dueDate: q.dueDate,
-          points: q.points,
-          questionsCount: q.questionsCount,
-          isMultipleAvailableDates: q.isMultipleAvailableDates,
-          isPublished: q.isPublished,
-        };
-        return quiz;
-      });
-    res.send(quizzes);
-  });
-
-  app.get("/api/quizzes/:qid", (req, res) => {
-    const { qid } = req.params;
-    const quizDetails = db.quizzes.find((q) => q._id === qid);
-    if (!quizDetails) {
-      res.status(404).send("Quiz not found");
-      return;
+export default function QuizRoutes(app) {
+  const findAllQuizzesByCourseId = async (req, res) => {
+    try {
+      const { cid } = req.params;
+      const quizzes = await dao.getAllQuizzesByCourseId(cid);
+      if (!quizzes) {
+        res.status(404).send("Quizzes not found");
+        return;
+      }
+      res.send(quizzes);
+    } catch (e) {
+      console.log("Error: ", e);
     }
-    res.send(quizDetails);
-  });
+  };
 
-  app.post("/api/quizzes/:qid/publish", (req, res) => {
-    const { qid } = req.params;
-    const quizIndex = db.quizzes.findIndex((q) => q._id === qid);
-    if (quizIndex === -1) {
-      res.status(404).send("Quiz not found");
-      return;
+  const createQuiz = async (req, res) => {
+    try {
+      const { cid } = req.params;
+      const quiz = await dao.createQuiz(cid, req.body);
+      res.json(quiz);
+    } catch (e) {
+      console.log("Error: ", e);
     }
+  };
 
-    const { isPublished } = req.body;
-    console.log(isPublished);
+  const deleteQuiz = async (req, res) => {
+    try {
+      const { qid } = req.params;
+      const status = await dao.deleteQuiz(qid);
+      res.json(status);
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
 
-    db.quizzes[quizIndex] = {
-      ...db.quizzes[quizIndex],
-      isPublished: isPublished,
-    };
-    res.sendStatus(204);
-  });
+  const updateQuiz = async (req, res) => {
+    try {
+      const { qid } = req.params;
+      const status = await dao.updateQuiz(qid, req.body);
+      res.json(status);
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
 
-  app.get("/api/quizzes/:qid/questions", (req, res) => {
-    const { qid } = req.params;
-    const questions = db.quizQuestions
-      .filter((q) => q.quizId === qid);
+  const findQuizDetails = async (req, res) => {
+    try {
+      const { qid } = req.params;
+      const quizDetails = await dao.getQuizDetails(qid);
+      if (!quizDetails) {
+        res.status(404).send("Quiz not found");
+        return;
+      }
+      res.send(quizDetails);
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
 
-    res.send(questions);
-  })
+  app.get("/api/courses/:cid/quizzes", findAllQuizzesByCourseId);
+  app.post("/api/courses/:cid/quizzes", createQuiz);
+  app.delete("/api/quizzes/:qid", deleteQuiz);
+  app.put("/api/quizzes/:qid", updateQuiz);
+  app.get("/api/quizzes/:qid", findQuizDetails);
 }
-
-export default QuizRoutes;
