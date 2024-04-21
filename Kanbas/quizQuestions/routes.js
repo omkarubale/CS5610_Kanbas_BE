@@ -57,7 +57,7 @@ export default function QuizRoutes(app) {
   };
 
   app.get("/api/quizzes/:qid/questions", findQuizQuestionsByQuizId);
-  app.post("/api/quizzes/qid/quizQuestion", createQuizQuestion);
+  app.post("/api/quizzes/:qid/quizQuestion", createQuizQuestion);
   app.get("/api/quizQuestions/:qqid", findQuizQuestion);
   app.delete("/api/quizQuestions/:qqid", deleteQuizQuestion);
   app.put("/api/quizQuestions/:qqid", updateQuizQuestion);
