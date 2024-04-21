@@ -35,7 +35,7 @@ const quizQuestionTemplate = {
 const generateQuizes = async (courseId) => {
   const quiz1 = generateQuiz(courseId, quizTemplate, 1, "Quiz A", 5);
   const quiz2 = generateQuiz(courseId, quizTemplate, 1, "Quiz B", 4);
-  const quiz3 = generateQuiz(courseId, quizTemplate, 1, "Quiz A", 3);
+  const quiz3 = generateQuiz(courseId, quizTemplate, 1, "Quiz C", 3);
 
   return await Promise.all([quiz1, quiz2, quiz3]);
 };
