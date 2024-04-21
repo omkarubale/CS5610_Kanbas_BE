@@ -1,11 +1,129 @@
 import db from "./../Database/index.js";
 import coursesModel from "./../courses/model.js";
 import { modulesModel, lessonsModel } from "../modules/model.js";
+import { quizzesModel } from "../quizzes/model.js";
+import { quizQuestionsModel } from "../quizQuestions/model.js";
+
+const quizTemplate = {
+  courseId: "RS101",
+  title: "Quiz A",
+  quizType: 1,
+  availableDate: "2023-01-05",
+  availableUntilDate: "2023-01-10",
+  dueDate: "2023-01-10",
+  points: 10,
+  questionsCount: 5,
+  isMultipleAvailableDates: false,
+  isPublished: false,
+  isShuffleAnswers: false,
+  timeLimit: 20,
+  isMultipleAttempts: false,
+  showCorrectAnswersDate: "2021-01-11",
+  isOneQuestionAtATime: false,
+  isWebcamRequired: false,
+  isLockQuestionsAfterAnswering: false,
+};
+
+const quizQuestionTemplate = {
+  quizId: "1",
+  quizQuestionType: 1,
+  title: "MCQ 1",
+  questionText: "MCQ Text 1",
+  points: 2,
+};
+
+const generateQuizes = async (courseId) => {
+  const quiz1 = generateQuiz(courseId, quizTemplate, 1, "Quiz A", 5);
+  const quiz2 = generateQuiz(courseId, quizTemplate, 1, "Quiz B", 4);
+  const quiz3 = generateQuiz(courseId, quizTemplate, 1, "Quiz A", 3);
+
+  return await Promise.all([quiz1, quiz2, quiz3]);
+};
+
+const generateQuiz = async (
+  courseId,
+  quizTemplate,
+  quizType,
+  quizTitle,
+  questionsCountPerType
+) => {
+  const _quiz = JSON.parse(JSON.stringify(quizTemplate));
+  _quiz.quizType = quizType;
+  _quiz.courseId = courseId;
+  _quiz.title = quizTitle;
+  _quiz.questionsCount = questionsCountPerType * 3;
+
+  console.log("attempting create: ", _quiz);
+  const quiz = await quizzesModel.create(_quiz);
+  console.log("quiz created: ", quiz);
+
+  const mcqQuestions = await generateQuizQuestions(
+    quiz._id,
+    1,
+    questionsCountPerType
+  );
+  const booleanQuestions = await generateQuizQuestions(
+    quiz._id,
+    2,
+    questionsCountPerType
+  );
+  const blankQuestions = await generateQuizQuestions(
+    quiz._id,
+    3,
+    questionsCountPerType
+  );
+
+  await Promise.all([mcqQuestions, booleanQuestions, blankQuestions]);
+
+  return quiz;
+};
+
+const generateQuizQuestions = async (
+  quizId,
+  questionType,
+  questionsCountPerType
+) => {
+  for (let i = 0; i < questionsCountPerType; i++) {
+    const _quizQuestion = quizQuestionTemplate;
+
+    _quizQuestion.quizId = quizId;
+    _quizQuestion.quizQuestionType = questionType;
+    _quizQuestion.title = "Quiz Question " + i.toString();
+    _quizQuestion.questionText = "Question Text " + i.toString();
+    _quizQuestion.points = 2;
+
+    if (questionType === 1) {
+      // MCQ
+      _quizQuestion.answerChoices = [
+        { choiceText: "Choice 1", isCorrect: true },
+        { choiceText: "Choice 2", isCorrect: false },
+        { choiceText: "Choice 3", isCorrect: false },
+      ];
+    } else if (questionType === 2) {
+      // Boolean
+      _quizQuestion.correctBooleanAnswer = true;
+    } else if (questionType === 3) {
+      // Blank
+      _quizQuestion.correctBlankAnswers = ["Correct Answer"];
+    }
+
+    console.log("attempting create: ", _quizQuestion);
+    const quizQuestion = await quizQuestionsModel.create(_quizQuestion);
+    console.log("quizQuestion created: ", quizQuestion);
+
+    delete _quizQuestion.answerChoices;
+    delete _quizQuestion.correctBooleanAnswer;
+    delete _quizQuestion.correctBlankAnswers;
+  }
+  return;
+};
 
 export const repopulateData = async (isTesting) => {
   await coursesModel.deleteMany({});
   await modulesModel.deleteMany({});
   await lessonsModel.deleteMany({});
+  await quizzesModel.deleteMany({});
+  await quizQuestionsModel.deleteMany({});
   if (!isTesting) {
   }
 
@@ -68,6 +186,7 @@ export const repopulateData = async (isTesting) => {
     // TODO: populate assignments for course
     // TODO: populate grades for course
     // TODO: populate quizzes for course
+    await generateQuizes(course._id);
 
     // reset course data
     c._id = _courseId;
