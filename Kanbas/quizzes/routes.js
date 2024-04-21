@@ -79,9 +79,9 @@ export default function QuizRoutes(app) {
   };
 
   app.get("/api/courses/:cid/quizzes", findAllQuizzesByCourseId);
+  app.get("/api/quizzes/:qid", findQuizDetails);
   app.post("/api/courses/:cid/quizzes", createQuiz);
   app.delete("/api/quizzes/:qid", deleteQuiz);
   app.put("/api/quizzes/:qid", updateQuiz);
-  app.get("/api/quizzes/:qid", findQuizDetails);
   app.post("/api/quizzes/:qid/publish", publishQuiz);
 }
