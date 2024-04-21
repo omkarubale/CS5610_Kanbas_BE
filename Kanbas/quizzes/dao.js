@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import quizzesModel from "./model.js";
-import quizQuestionsModel from "./../quizQuestions/model.js";
+import { quizzesModel } from "./model.js";
+import { quizQuestionsModel } from "./../quizQuestions/model.js";
 
 export const getAllQuizzesByCourseId = (courseId) =>
   quizzesModel.find({ courseId: courseId });
