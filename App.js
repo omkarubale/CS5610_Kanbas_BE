@@ -6,6 +6,7 @@ import CourseRoutes from "./Kanbas/courses/routes.js";
 import ModuleRoutes from "./Kanbas/modules/routes.js";
 import AssignmentRoutes from "./Kanbas/assignments/routes.js";
 import QuizRoutes from "./Kanbas/quizzes/routes.js";
+import QuizQuestionRoutes from "./Kanbas/quizQuestions/routes.js";
 import UserRoutes from "./Users/routes.js";
 import SetupRoutes from "./Kanbas/setup/routes.js";
 import mongoose from "mongoose";
@@ -53,6 +54,7 @@ CourseRoutes(app);
 ModuleRoutes(app);
 AssignmentRoutes(app);
 QuizRoutes(app);
+QuizQuestionRoutes(app);
 Hello(app);
 Lab5(app);
 
