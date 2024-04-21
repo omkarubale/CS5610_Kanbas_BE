@@ -1,7 +1,6 @@
 import * as dao from "./dao.js";
 
 export default function QuizRoutes(app) {
-
   const findAllQuizzesByCourseId = async (req, res) => {
     try {
       const { cid } = req.params;
@@ -14,7 +13,7 @@ export default function QuizRoutes(app) {
     } catch (e) {
       console.log("Error: ", e);
     }
-  }
+  };
 
   const createQuiz = async (req, res) => {
     try {
@@ -24,7 +23,7 @@ export default function QuizRoutes(app) {
     } catch (e) {
       console.log("Error: ", e);
     }
-  }
+  };
 
   const deleteQuiz = async (req, res) => {
     try {
@@ -34,7 +33,7 @@ export default function QuizRoutes(app) {
     } catch (e) {
       console.log("Error: ", e);
     }
-  }
+  };
 
   const updateQuiz = async (req, res) => {
     try {
@@ -44,7 +43,7 @@ export default function QuizRoutes(app) {
     } catch (e) {
       console.log("Error: ", e);
     }
-  }
+  };
 
   const findQuizDetails = async (req, res) => {
     try {
@@ -58,7 +57,7 @@ export default function QuizRoutes(app) {
     } catch (e) {
       console.log("Error: ", e);
     }
-  }
+  };
 
   app.get("/api/courses/:cid/quizzes", findAllQuizzesByCourseId);
   app.post("/api/courses/:cid/quizzes", createQuiz);

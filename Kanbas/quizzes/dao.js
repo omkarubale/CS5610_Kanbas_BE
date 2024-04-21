@@ -1,20 +1,22 @@
 import mongoose from "mongoose";
-import model from "./model.js";
+import quizzesModel from "./model.js";
+import quizQuestionsModel from "./../quizQuestions/model.js";
 
 export const getAllQuizzesByCourseId = (courseId) =>
-    model.find({ course: courseId });
+  quizzesModel.find({ courseId: courseId });
 
 export const createQuiz = (courseId, quiz) => {
-    delete quiz._id; // delete id if being passed by UI 
-    quiz.course = mongoose.Types.ObjectId.createFromHexString(courseId);
-    return model.create(quiz);
-}
+  delete quiz._id;
+  quiz.courseId = courseId;
+  return quizzesModel.create(quiz);
+};
 
-export const deleteQuiz = (quizId) =>
-    model.deleteOne({ _id: mongoose.Types.ObjectId.createFromHexString(quizId) });
+export const deleteQuiz = (quizId) => {
+  quizzesModel.findByIdAndDelete(quizId);
+  quizQuestionsModel.deleteMany({ quizId: quizId });
+};
 
 export const updateQuiz = (quizId, quiz) =>
-    model.updateOne({ _id: mongoose.Types.ObjectId.createFromHexString(quizId) }, { $set: quiz });
+  quizzesModel.findByIdAndUpdate(quizId, quiz);
 
-export const getQuizDetails = (quizId) =>
-    model.findOne({ _id: mongoose.Types.ObjectId.createFromHexString(quizId) });
+export const getQuizDetails = (quizId) => quizzesModel.findById(quizId);

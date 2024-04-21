@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import model from "./model.js";
+import quizQuestionsModel from "./model.js";
 
 export const getQuizQuestions = (quizId) =>
-    model.find({ quizId: mongoose.Types.ObjectId.createFromHexString(quizId) });
+  quizQuestionsModel.find({ quizId: quizId });
