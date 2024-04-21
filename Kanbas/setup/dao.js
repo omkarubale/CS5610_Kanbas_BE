@@ -126,8 +126,8 @@ export const repopulateData = async () => {
   await coursesModel.deleteMany({});
   await modulesModel.deleteMany({});
   await lessonsModel.deleteMany({});
-  //   await quizzesModel.deleteMany({});
-  //   await quizQuestionsModel.deleteMany({});
+  await quizzesModel.deleteMany({});
+  await quizQuestionsModel.deleteMany({});
 
   for (const c of db.courses) {
     const _courseId = c._id;
