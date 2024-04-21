@@ -59,9 +59,29 @@ export default function QuizRoutes(app) {
     }
   };
 
+  const publishQuiz = async (req, res) => {
+    try {
+      const { qid } = req.params;
+      const quizDetails = await dao.getQuizDetails(qid);
+      if (!quizDetails) {
+        res.status(404).send("Quiz not found");
+        return;
+      }
+
+      const { isPublished } = req.body;
+      quizDetails.isPublished = isPublished;
+      await dao.updateQuiz(quizDetails._id, quizDetails);
+
+      res.sendStatus(204);
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
+
   app.get("/api/courses/:cid/quizzes", findAllQuizzesByCourseId);
   app.post("/api/courses/:cid/quizzes", createQuiz);
   app.delete("/api/quizzes/:qid", deleteQuiz);
   app.put("/api/quizzes/:qid", updateQuiz);
   app.get("/api/quizzes/:qid", findQuizDetails);
+  app.post("/api/quizzes/:qid/publish", publishQuiz);
 }

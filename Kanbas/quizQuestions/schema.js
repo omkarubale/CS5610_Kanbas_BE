@@ -1,20 +1,21 @@
+import { Schema } from "mongoose";
 import mongoose from "mongoose";
 
-const choiceSchema = new mongoose.Schema({
+export const choiceSchema = new mongoose.Schema({
   choiceText: String,
   isCorrect: Boolean,
 });
 
-const quizQuestionSchema = new mongoose.Schema(
+export const quizQuestionSchema = new mongoose.Schema(
   {
-    quizId: { type: mongoose.Types.ObjectId, ref: "QuizModel" },
+    quizId: { type: Schema.ObjectId, ref: "QuizzesModel" },
     quizQuestionType: Number,
-    title: String,
+    title: { type: String, required: true },
     questionText: String,
     points: Number,
-    answerChoices: { type: [choiceSchema], require: false },
-    correctBooleanAnswer: { type: Boolean, require: false },
-    correctBlankAnswers: { type: [String], require: false },
+    answerChoices: [choiceSchema],
+    correctBooleanAnswer: Boolean,
+    correctBlankAnswers: [String],
   },
   { collection: "quizQuestions" }
 );
