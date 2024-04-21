@@ -83,6 +83,8 @@ const generateQuizQuestions = async (
   questionType,
   questionsCountPerType
 ) => {
+  const quizQuestions = [];
+
   for (let i = 0; i < questionsCountPerType; i++) {
     const _quizQuestion = quizQuestionTemplate;
 
@@ -111,21 +113,21 @@ const generateQuizQuestions = async (
     const quizQuestion = await quizQuestionsModel.create(_quizQuestion);
     console.log("quizQuestion created: ", quizQuestion);
 
+    quizQuestions.push(quizQuestion);
+
     delete _quizQuestion.answerChoices;
     delete _quizQuestion.correctBooleanAnswer;
     delete _quizQuestion.correctBlankAnswers;
   }
-  return;
+  return await Promise.all(quizQuestions);
 };
 
-export const repopulateData = async (isTesting) => {
+export const repopulateData = async () => {
   await coursesModel.deleteMany({});
   await modulesModel.deleteMany({});
   await lessonsModel.deleteMany({});
-  await quizzesModel.deleteMany({});
-  await quizQuestionsModel.deleteMany({});
-  if (!isTesting) {
-  }
+  //   await quizzesModel.deleteMany({});
+  //   await quizQuestionsModel.deleteMany({});
 
   for (const c of db.courses) {
     const _courseId = c._id;
