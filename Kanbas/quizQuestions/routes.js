@@ -1,10 +1,13 @@
-import * as dao from "./dao.js";
+import * as quizQuestionsDao from "./dao.js";
+import * as quizzesDao from "./../quizzes/dao.js";
 
 export default function QuizRoutes(app) {
   const findQuizQuestionsByQuizId = async (req, res) => {
     try {
       const { qid } = req.params;
-      const quizQuestions = await dao.getQuizQuestionsByQuizId(qid);
+      const quizQuestions = await quizQuestionsDao.getQuizQuestionsByQuizId(
+        qid
+      );
       if (!quizQuestions) {
         res.status(404).send("Quiz Questions not found");
         return;
@@ -18,7 +21,7 @@ export default function QuizRoutes(app) {
   const findQuizQuestion = async (req, res) => {
     try {
       const { qqid } = req.params;
-      const quizQuestions = await dao.getQuizQuestion(qqid);
+      const quizQuestions = await quizQuestionsDao.getQuizQuestion(qqid);
       if (!quizQuestions) {
         res.status(404).send("Quiz not found");
         return;
@@ -31,7 +34,7 @@ export default function QuizRoutes(app) {
   const createQuizQuestion = async (req, res) => {
     try {
       const { qid } = req.params;
-      const quiz = await dao.createQuizQuestion(qid, req.body);
+      const quiz = await quizQuestionsDao.createQuizQuestion(qid, req.body);
       res.json(quiz);
     } catch (e) {
       console.log("Error: ", e);
@@ -40,7 +43,7 @@ export default function QuizRoutes(app) {
   const deleteQuizQuestion = async (req, res) => {
     try {
       const { qqid } = req.params;
-      const status = await dao.deleteQuizQuestion(qqid);
+      const status = await quizQuestionsDao.deleteQuizQuestion(qqid);
       res.json(status);
     } catch (e) {
       console.log("Error: ", e);
@@ -49,7 +52,7 @@ export default function QuizRoutes(app) {
   const updateQuizQuestion = async (req, res) => {
     try {
       const { qqid } = req.params;
-      const status = await dao.updateQuizQuestion(qqid, req.body);
+      const status = await quizQuestionsDao.updateQuizQuestion(qqid, req.body);
       res.json(status);
     } catch (e) {
       console.log("Error: ", e);
@@ -60,9 +63,12 @@ export default function QuizRoutes(app) {
     try {
       const { qid } = req.params;
       const newQuizQuestions = req.body;
-      const oldQuizQuestions = await dao.getQuizQuestionsByQuizId(qid);
+      const oldQuizQuestions = await quizQuestionsDao.getQuizQuestionsByQuizId(
+        qid
+      );
 
       const promises = [];
+      let totalPoints = 0;
 
       // create and update
       for (let i = 0; i < newQuizQuestions.length; i++) {
@@ -73,11 +79,13 @@ export default function QuizRoutes(app) {
             // update
             matchFound = true;
             promises.push(
-              await dao.updateQuizQuestion(
+              await quizQuestionsDao.updateQuizQuestion(
                 newQuizQuestions[i]._id,
                 newQuizQuestions[i]
               )
             );
+
+            totalPoints += newQuizQuestions[i].points;
             break;
           }
         }
@@ -86,11 +94,12 @@ export default function QuizRoutes(app) {
           // create
           delete newQuizQuestions[i]._id;
           promises.push(
-            await dao.createQuizQuestion(
+            await quizQuestionsDao.createQuizQuestion(
               newQuizQuestions[i].quizId,
               newQuizQuestions[i]
             )
           );
+          totalPoints += newQuizQuestions[i].points;
         }
       }
 
@@ -107,10 +116,21 @@ export default function QuizRoutes(app) {
         if (matchFound === false) {
           // delete
           promises.push(
-            await dao.deleteQuizQuestion(oldQuizQuestions[j]._id.toString())
+            await quizQuestionsDao.deleteQuizQuestion(
+              oldQuizQuestions[j]._id.toString()
+            )
           );
         }
       }
+
+      promises.push(
+        await quizzesDao.updateQuiz(qid, {
+          $set: {
+            questionsCount: newQuizQuestions.length,
+            points: totalPoints,
+          },
+        })
+      );
 
       await Promise.all(promises);
       res.json(204);
