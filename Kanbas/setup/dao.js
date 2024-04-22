@@ -7,6 +7,8 @@ import { quizQuestionsModel } from "../quizQuestions/model.js";
 const quizTemplate = {
   courseId: "RS101",
   title: "Quiz A",
+  description: "My Quiz Desciption",
+  accessCode: "AccessCode",
   quizType: 1,
   availableDate: "2023-01-05",
   availableUntilDate: "2023-01-10",
