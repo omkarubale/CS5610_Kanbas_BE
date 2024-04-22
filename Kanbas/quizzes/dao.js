@@ -11,9 +11,12 @@ export const createQuiz = (courseId, quiz) => {
   return quizzesModel.create(quiz);
 };
 
-export const deleteQuiz = (quizId) => {
-  quizzesModel.findByIdAndDelete(quizId);
+const deleteQuizQuestions = (quizId) =>
   quizQuestionsModel.deleteMany({ quizId: quizId });
+
+export const deleteQuiz = (quizId) => {
+  deleteQuizQuestions(quizId);
+  return quizzesModel.findByIdAndDelete(quizId);
 };
 
 export const updateQuiz = (quizId, quiz) =>
