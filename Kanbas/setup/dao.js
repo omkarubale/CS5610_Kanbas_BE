@@ -87,11 +87,27 @@ const generateQuizQuestions = async (
 
   for (let i = 0; i < questionsCountPerType; i++) {
     const _quizQuestion = quizQuestionTemplate;
+    let questionTypeString = "";
+    switch (questionType) {
+      case 1:
+        questionTypeString = "MCQ ";
+        break;
+      case 2:
+        questionTypeString = "True/False ";
+        break;
+      case 3:
+        questionTypeString = "Fill in the Blank ";
+        break;
+      default:
+        throw new Error("Question type not implemented!");
+    }
 
     _quizQuestion.quizId = quizId;
     _quizQuestion.quizQuestionType = questionType;
-    _quizQuestion.title = "Quiz Question " + i.toString();
-    _quizQuestion.questionText = "Question Text " + i.toString();
+    _quizQuestion.title =
+      questionTypeString + "Quiz Question " + (i + 1).toString();
+    _quizQuestion.questionText =
+      questionTypeString + "Question Text " + (i + 1).toString();
     _quizQuestion.points = 2;
 
     if (questionType === 1) {
@@ -106,7 +122,11 @@ const generateQuizQuestions = async (
       _quizQuestion.correctBooleanAnswer = true;
     } else if (questionType === 3) {
       // Blank
-      _quizQuestion.correctBlankAnswers = ["Correct Answer"];
+      _quizQuestion.correctBlankAnswers = [
+        "Correct Answer 1",
+        "Correct Answer 2",
+        "Correct Answer 3",
+      ];
     }
 
     console.log("attempting create: ", _quizQuestion);
